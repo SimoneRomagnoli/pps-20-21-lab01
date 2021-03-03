@@ -1,9 +1,7 @@
 import lab01.tdd.CircularList;
 import lab01.tdd.CircularListImpl;
 import lab01.tdd.SelectStrategy;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -23,6 +21,8 @@ public class CircularListTest {
     private static final int ITERATIONS = 100;
     private static final int ODD_ELEMENT = 9;
     private static final int EVEN_ELEMENT = 4;
+    private static final int NO_REST = 0;
+    private static final int ANSWER_TO_LIFE_UNIVERSE_AND_EVERYTHING = 42;
     CircularList circularList;
 
     @BeforeEach
@@ -92,20 +92,44 @@ public class CircularListTest {
         assertEquals(Optional.of(ITERATIONS), this.circularList.previous());
     }
 
+    private boolean isEven(int number) {
+        return number % 2 == NO_REST;
+    }
+
     @Test
     void testEvenStrategy() {
         for(int i = START_ITERATIONS; i <= ITERATIONS; i++) {
             circularList.add(ODD_ELEMENT);
         }
         circularList.add(EVEN_ELEMENT);
+        for(int i = START_ITERATIONS; i <= ITERATIONS; i++) {
+            circularList.add(ODD_ELEMENT);
+        }
 
         SelectStrategy strategy = new SelectStrategy() {
             @Override
             public boolean apply(int element) {
-                return element % 2 == 0;
+                return isEven(element);
             }
         };
         assertEquals(Optional.of(EVEN_ELEMENT), circularList.next(strategy));
     }
 
+    @Test
+    void testEqualsStrategy() {
+        for(int i = START_ITERATIONS; i <= ITERATIONS; i++) {
+            circularList.add(ONE_ELEMENT);
+        }
+        circularList.add(ANSWER_TO_LIFE_UNIVERSE_AND_EVERYTHING);
+        for(int i = START_ITERATIONS; i <= ITERATIONS; i++) {
+            circularList.add(ODD_ELEMENT);
+        }
+        SelectStrategy strategy = new SelectStrategy() {
+            @Override
+            public boolean apply(int element) {
+                return element == ANSWER_TO_LIFE_UNIVERSE_AND_EVERYTHING;
+            }
+        };
+        assertEquals(Optional.of(ANSWER_TO_LIFE_UNIVERSE_AND_EVERYTHING), circularList.next(strategy));
+    }
 }
