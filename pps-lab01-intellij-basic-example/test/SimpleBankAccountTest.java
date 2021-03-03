@@ -10,12 +10,16 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class SimpleBankAccountTest {
 
-    private AccountHolder accountHolder;
-    private BankAccount bankAccount;
+    protected AccountHolder accountHolder;
+    protected BankAccount bankAccount;
 
     @BeforeEach
-    void beforeEach(){
+    void setAccountHolder() {
         accountHolder = new AccountHolder("Mario", "Rossi", 1);
+    }
+
+    @BeforeEach
+    void setBankAccount(){
         bankAccount = new SimpleBankAccount(accountHolder, 0);
     }
 
