@@ -53,20 +53,28 @@ public class CircularListTest {
     void testNext() {
         assertEquals(Optional.empty(), this.circularList.next());
         this.circularList.add(ONE_ELEMENT);
-        assertEquals(Optional.of(ONE_ELEMENT), this.circularList.next());
         this.circularList.add(ANOTHER_ELEMENT);
+        assertEquals(Optional.of(ONE_ELEMENT), this.circularList.next());
         assertEquals(Optional.of(ANOTHER_ELEMENT), this.circularList.next());
+    }
+
+    @Test
+    void testNextCircularity() {
+        testNext();
         assertEquals(Optional.of(ONE_ELEMENT), this.circularList.next());
     }
 
     @Test
     void testPrevious() {
         assertEquals(Optional.empty(), this.circularList.previous());
-        this.circularList.add(ONE_ELEMENT);
+        testNext();
         assertEquals(Optional.of(ONE_ELEMENT), this.circularList.previous());
-        this.circularList.add(ANOTHER_ELEMENT);
+    }
+
+    @Test
+    void testPreviousCircularity() {
+        testPrevious();
         assertEquals(Optional.of(ANOTHER_ELEMENT), this.circularList.previous());
-        assertEquals(Optional.of(ONE_ELEMENT), this.circularList.previous());
     }
 
     @Test
