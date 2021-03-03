@@ -1,5 +1,6 @@
 import lab01.tdd.CircularList;
 import lab01.tdd.CircularListImpl;
+import lab01.tdd.SelectStrategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -20,6 +21,8 @@ public class CircularListTest {
     private static final int ANOTHER_ELEMENT = 2;
     private static final int START_ITERATIONS = 1;
     private static final int ITERATIONS = 100;
+    private static final int ODD_ELEMENT = 9;
+    private static final int EVEN_ELEMENT = 4;
     CircularList circularList;
 
     @BeforeEach
@@ -88,4 +91,21 @@ public class CircularListTest {
         this.circularList.reset();
         assertEquals(Optional.of(ITERATIONS), this.circularList.previous());
     }
+
+    @Test
+    void testEvenStrategy() {
+        for(int i = START_ITERATIONS; i <= ITERATIONS; i++) {
+            circularList.add(ODD_ELEMENT);
+        }
+        circularList.add(EVEN_ELEMENT);
+
+        SelectStrategy strategy = new SelectStrategy() {
+            @Override
+            public boolean apply(int element) {
+                return element % 2 == 0;
+            }
+        };
+        assertEquals(Optional.of(EVEN_ELEMENT), circularList.next(strategy));
+    }
+
 }
