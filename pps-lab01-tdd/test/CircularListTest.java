@@ -68,4 +68,16 @@ public class CircularListTest {
         assertEquals(Optional.of(ANOTHER_ELEMENT), this.circularList.previous());
         assertEquals(Optional.of(ONE_ELEMENT), this.circularList.previous());
     }
+
+    @Test
+    void testReset() {
+        for(int i = START_ITERATIONS; i <= ITERATIONS; i++) {
+            this.circularList.add(i);
+            this.circularList.next();
+        }
+        this.circularList.reset();
+        assertEquals(Optional.of(START_ITERATIONS), this.circularList.next());
+        this.circularList.reset();
+        assertEquals(Optional.of(ITERATIONS), this.circularList.previous());
+    }
 }
