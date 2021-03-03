@@ -54,7 +54,9 @@ public class CircularListImpl implements CircularList {
 
     @Override
     public Optional<Integer> previous() {
-        return Optional.empty();
+        return this.isEmpty()
+                ? Optional.empty()
+                : Optional.of(this.get(--index));
     }
 
     @Override
