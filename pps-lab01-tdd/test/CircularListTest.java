@@ -1,6 +1,4 @@
-import lab01.tdd.CircularList;
-import lab01.tdd.CircularListImpl;
-import lab01.tdd.SelectStrategy;
+import lab01.tdd.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,14 +19,19 @@ public class CircularListTest {
     private static final int ITERATIONS = 100;
     private static final int ODD_ELEMENT = 9;
     private static final int EVEN_ELEMENT = 4;
-    private static final int NO_REST = 0;
     private static final int ANSWER_TO_LIFE_UNIVERSE_AND_EVERYTHING = 42;
+    private static final int SQUARE_OF_42 = 1764;
+
     CircularList circularList;
+    SelectStrategyFactory factory;
 
     @BeforeEach
     void setCircularList() {
         this.circularList = new CircularListImpl();
     }
+
+    @BeforeEach
+    void setFactory() { factory = new SelectStrategyFactory(); }
 
     @Test
     void testAdd() {
@@ -92,10 +95,6 @@ public class CircularListTest {
         assertEquals(Optional.of(ITERATIONS), this.circularList.previous());
     }
 
-    private boolean isEven(int number) {
-        return number % 2 == NO_REST;
-    }
-
     @Test
     void testEvenStrategy() {
         for(int i = START_ITERATIONS; i <= ITERATIONS; i++) {
@@ -106,12 +105,7 @@ public class CircularListTest {
             circularList.add(ODD_ELEMENT);
         }
 
-        SelectStrategy strategy = new SelectStrategy() {
-            @Override
-            public boolean apply(int element) {
-                return isEven(element);
-            }
-        };
+        SelectStrategy strategy = factory.getSelectStrategy(StrategyType.EVEN, Optional.empty());
         assertEquals(Optional.of(EVEN_ELEMENT), circularList.next(strategy));
     }
 
@@ -124,12 +118,20 @@ public class CircularListTest {
         for(int i = START_ITERATIONS; i <= ITERATIONS; i++) {
             circularList.add(ODD_ELEMENT);
         }
-        SelectStrategy strategy = new SelectStrategy() {
-            @Override
-            public boolean apply(int element) {
-                return element == ANSWER_TO_LIFE_UNIVERSE_AND_EVERYTHING;
-            }
-        };
+        SelectStrategy strategy = factory.getSelectStrategy(StrategyType.EQUALS, Optional.of(ANSWER_TO_LIFE_UNIVERSE_AND_EVERYTHING));
         assertEquals(Optional.of(ANSWER_TO_LIFE_UNIVERSE_AND_EVERYTHING), circularList.next(strategy));
+    }
+
+    @Test
+    void testSquareStrategy() {
+        for(int i = START_ITERATIONS; i <= ITERATIONS; i++) {
+            circularList.add(ONE_ELEMENT);
+        }
+        circularList.add(SQUARE_OF_42);
+        for(int i = START_ITERATIONS; i <= ITERATIONS; i++) {
+            circularList.add(ODD_ELEMENT);
+        }
+        SelectStrategy strategy = factory.getSelectStrategy(StrategyType.SQUARE, Optional.of(ANSWER_TO_LIFE_UNIVERSE_AND_EVERYTHING));
+        assertEquals(Optional.of(SQUARE_OF_42), circularList.next(strategy));
     }
 }
